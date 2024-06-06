@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bola Rotar</title>
+</head>
+
+<body>
+    <h1 id="bola-rotar " class="titulo">Bola Rotar</h1>
+    <p>
+        En este ejercicio he creado una esfera que da vueltas periodicas a una
+        circunferencia, basandome en las ecucaciones del movimiento circular
+        uniforme.
+    </p>
+    <p>
+        Hay una función <code>Bola()</code> en la que dibujamos la esfera ademas
+        de actualizar las coordenadas de la misma para que siga con el movimiento
+        periodico. Estas coordenadas se actulizan segun la ecuación de posición
+        del movimiento circular uniforme(mcu).
+    </p>
+    <pre><code><span class="hljs-keyword">void</span> bola(){
+
+    x = <span class="hljs-built_in">width</span>/<span class="hljs-number">2</span> + r* <span class="hljs-built_in">cos</span>(w * <span class="hljs-built_in">millis</span>()/<span class="hljs-number">1000</span>); 
+    y = <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span> + r* <span class="hljs-built_in">sin</span>(w* <span class="hljs-built_in">millis</span>()/<span class="hljs-number">1000</span>);
+
+    <span class="hljs-built_in">stroke</span>(#<span class="hljs-number">34</span>C70F);
+    <span class="hljs-built_in">strokeWeight</span>(<span class="hljs-number">4</span>);
+    <span class="hljs-built_in">noFill</span>();
+    <span class="hljs-built_in">ellipse</span>(<span class="hljs-built_in">width</span>/<span class="hljs-number">2</span>, <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span>, <span class="hljs-number">2</span>*r,<span class="hljs-number">2</span>*r);
+
+     <span class="hljs-built_in">stroke</span>(#F04AC6);
+    <span class="hljs-built_in">fill</span>(#F04AC6);
+    <span class="hljs-built_in">ellipse</span>(x,y,<span class="hljs-number">30</span>,<span class="hljs-number">30</span>);
+
+}
+</code></pre>
+    <p>
+        Las coordenadas del centro de la circunferencia sobre la cual queremos que
+        de vueltas nuestra esfera, son <strong>width/2</strong> y
+        <strong>height/2</strong>. Y el tiempo al estar en milisegundo lo tenemos
+        que pasar a segundo, por tanto lo dividimos entre 1000.
+    </p>
+    <p>
+        Pro último, para calcular la w o velocidad angular, lo hago en el setup(),
+        porque no me hace falta calcular en cada interacción la velocidad de
+        nuevo, ya que esta no cambia. Basicamente lo que hago es <math >
+            <mfrac>
+              <mrow>
+                <mn>2</mn>
+                <mi>π</mi>
+              </mrow>
+              <mi>t</mi>
+            </mfrac>
+          </math>,
+        donde t es el periodo.
+    </p>
+    <pre><code>void setup(){
+  size(<span class="hljs-number">700</span>,<span class="hljs-number">700</span>);
+  r= <span class="hljs-number">150</span>;
+  p = new PVector(width/<span class="hljs-number">2</span> + r, height/<span class="hljs-number">2</span>);
+  t=<span class="hljs-number">1</span>;
+  w = (<span class="hljs-number">2</span>*<span class="hljs-literal">PI</span>) / t;
+}
+</code></pre>
+    <h5 id="resultado-final-">Resultado Final:</h5>
+    <div class="d-flex justify-content-center">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/qAZn7D2iv4c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>  
+</body>
+
+</html>

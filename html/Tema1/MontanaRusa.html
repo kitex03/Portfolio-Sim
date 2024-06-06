@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Montaña Rusa</title>
+</head>
+
+<body>
+  <h1 id="monta-a-rusa" class="titulo">Montaña Rusa</h1>
+  <p>
+    En este proyecto lo que he hecho es implementar una simulacion en la que
+    una pelota va por un recorrido a distintas velocidades, dependiendo del
+    tramo, en el que se encuentra.\ Consideramos que simula el movimiento de
+    una montaña rusa, porque al recorrer los tramos a distintas velocidades,
+    recreamos el movimiento que hace un vagon por las vias de una montaña
+    rusa.
+  </p>
+  <p>
+    En el <code>setup()</code> creamos todos los puntos de los extremos de los
+    tramos de nuestra montaña rusa. Como puedes ver son en funcion de la
+    altura y anchura del display.\ Luego tambien calculamos la direccion en el
+    primer tramo para empezar con una velocidad inicial de 10.
+  </p>
+  <pre><code><span class="hljs-keyword">void</span> <span class="hljs-title">setup</span>(){
+  <span class="hljs-built_in">size</span>(<span class="hljs-number">600</span>, <span class="hljs-number">600</span>); <span class="hljs-comment">// Abrir una ventana</span>
+  a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">PVector</span>(<span class="hljs-built_in">width</span>/<span class="hljs-number">2</span> - <span class="hljs-number">0.2</span>*<span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span>);
+  b = <span class="hljs-keyword">new</span> <span class="hljs-keyword">PVector</span>(<span class="hljs-built_in">width</span>/<span class="hljs-number">2</span> + <span class="hljs-number">0.3</span>*<span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span> - <span class="hljs-number">0.1</span>*<span class="hljs-built_in">height</span>);
+  c = <span class="hljs-keyword">new</span> <span class="hljs-keyword">PVector</span>(<span class="hljs-built_in">width</span>/<span class="hljs-number">2</span> + <span class="hljs-number">0.1</span>*<span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span> - <span class="hljs-number">0.3</span>*<span class="hljs-built_in">height</span>);
+  d = <span class="hljs-keyword">new</span> <span class="hljs-keyword">PVector</span>(<span class="hljs-built_in">width</span>/<span class="hljs-number">2</span> - <span class="hljs-number">0.4</span>*<span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span> - <span class="hljs-number">0.4</span>*<span class="hljs-built_in">height</span>);
+  p = <span class="hljs-keyword">new</span> <span class="hljs-keyword">PVector</span>(<span class="hljs-built_in">width</span>/<span class="hljs-number">2</span> - <span class="hljs-number">0.2</span>*<span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>/<span class="hljs-number">2</span>);
+  vel = <span class="hljs-keyword">PVector</span>.sub(b,a).normalize().mult(<span class="hljs-number">10</span>); <span class="hljs-comment">// Saca la direccion</span>
+  <span class="hljs-built_in">println</span>(vel);
+  aceleracion=<span class="hljs-number">2</span>;
+
+}
+</code></pre>
+  <p>
+    Luego tenemos la funcion <code>draw()</code> es donde calculculamos la
+    direccion del vector en función de cada tramo, para despues con las
+    ecuaciones de posicion , calcular la posición de la partícula en cada dt,
+    diferencial de tiempo.\ Con la linea
+    <code>p.add(PVector.mult(vel, mult));</code> calculamos la posicion,
+    teniendo en cuenta que vel es la velocidad de la particual y mult es la
+    multiplicación del dt por la aceleración.
+  </p>
+  <pre><code><span class="hljs-keyword">void</span> <span class="hljs-title">draw</span>(){
+  <span class="hljs-built_in">background</span>(#f1f2f6);
+  linea(a.x,a.y,b.x,b.y);
+  linea(b.x,b.y,c.x,c.y);
+  linea(c.x,c.y,d.x,d.y);
+  particula();
+  puntoA();
+  puntoB();
+  puntoC();
+  puntoD();
+
+
+  <span class="hljs-comment">// Verificar si la partícula ha alcanzado el punto B</span>
+  <span class="hljs-keyword">if</span> (p.<span class="hljs-built_in">dist</span>(b) &lt;= <span class="hljs-number">1</span> &amp;&amp; !llegadab) {
+    vel = <span class="hljs-keyword">PVector</span>.sub(c,b).normalize().mult(<span class="hljs-number">10</span>);
+    <span class="hljs-built_in">println</span>(vel);
+    aceleracion=<span class="hljs-number">1</span>;
+    llegadab=<span class="hljs-keyword">true</span>;
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(p.<span class="hljs-built_in">dist</span>(c) &lt;= <span class="hljs-number">1</span>){
+      vel = <span class="hljs-keyword">PVector</span>.sub(d,c).normalize().mult(<span class="hljs-number">10</span>);
+    <span class="hljs-built_in">println</span>(vel);
+    aceleracion=<span class="hljs-number">4</span>;
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(p.<span class="hljs-built_in">dist</span>(d) &lt;=<span class="hljs-number">1</span>){
+    llegada=<span class="hljs-keyword">true</span>;  
+  }
+  mult= dt*aceleracion;
+   <span class="hljs-comment">// Mover la partícula en la dirección y velocidad adecuadas</span>
+   <span class="hljs-keyword">if</span>(!llegada){
+     p.<span class="hljs-built_in">add</span>(<span class="hljs-keyword">PVector</span>.mult(vel, mult));
+   }
+}
+</code></pre>
+  <h5 id="resultado-final-">Resultado Final:</h5>
+  <div class="d-flex justify-content-center">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/uMP1FoMhMwo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Funciones Oscilatorias</title>
+    <style></style>
+  </head>
+  <body id="preview">
+    <h1 id="funciones-oscilatorias" class="titulo"> Funciones Oscilatorias</h1>
+    <p>
+      En este proyecto he implementado dos particulas, donde el movimiento de
+      cada una viene dado por una función oscilatoria. En la parte superiror
+      esta la particula definida por el movimiento de la primera función,
+      mientras que la particula de abajo viene definida por el movimiento de la
+      segunda función.
+    </p>
+    <p>
+      En las dos funciones la <code>v</code> o la velocidad de propagación, es
+      la misma, a parte de que es una velocidad constante en todo el movimiento.
+    </p>
+    <math class="formula" >
+      <mrow>
+        <mi>_</mi>
+        <mi>s</mi>
+        <mi>f</mi>
+        <mn>1</mn>
+        <mi>.</mi>
+        <mi>y</mi>
+        <mo>=</mo>
+      </mrow>
+      <mrow>
+        <mn>0.5</mn>
+        <mo>*</mo>
+      </mrow>
+      <mrow>
+        <mrow>
+          <mi>sin</mi>
+          <mo>⁡</mo>
+        </mrow>
+        <mo form="prefix" stretchy="false">(</mo>
+        <mn>3</mn>
+        <mo>*</mo>
+        <mi>_</mi>
+        <mi>s</mi>
+        <mi>f</mi>
+        <mn>1</mn>
+        <mi>.</mi>
+        <mi>x</mi>
+        <mo form="postfix" stretchy="false">)</mo>
+        <mo>+</mo>
+      </mrow>
+      <mrow>
+        <mn>0.5</mn>
+        <mo>*</mo>
+      </mrow>
+      <mrow>
+        <mrow>
+          <mi>sin</mi>
+          <mo>⁡</mo>
+        </mrow>
+        <mo form="prefix" stretchy="false">(</mo>
+        <mn>3.5</mn>
+        <mo>*</mo>
+        <mi>_</mi>
+        <mi>s</mi>
+        <mi>f</mi>
+        <mn>1</mn>
+        <mi>.</mi>
+        <mi>x</mi>
+        <mo form="postfix" stretchy="false">)</mo>
+      </mrow>
+    </math>
+    <p>
+      Esta es la primera función, donde _sf1 son las coordenadas de posición de
+      la particula. Esta función es una suma de dos funciones sinusuidales, la
+      primera con una frecuencia de 3 y la segunda con una frecuencia de 3.5.
+    </p>
+    <p>
+      Mientras que la segunda función es una exponecial por una función
+      sinusuidal donde _sf2 son
+      las coordenadas de posición de la segunda partícula.
+    </p>
+    <math class="formula">
+      <mrow>
+        <mi>_</mi>
+        <mi>s</mi>
+        <mi>f</mi>
+        <mn>1</mn>
+        <mi>.</mi>
+        <mi>y</mi>
+        <mo>=</mo>
+        <mn>0.5</mn>
+        <mo>*</mo>
+        <mrow>
+          <mi>sin</mi>
+          <mo>⁡</mo>
+        </mrow>
+        <mo form="prefix" stretchy="false">(</mo>
+        <mn>3</mn>
+        <mo>*</mo>
+        <mi>_</mi>
+        <mi>s</mi>
+        <mi>f</mi>
+        <mn>1</mn>
+        <mi>.</mi>
+        <mi>x</mi>
+        <mo form="postfix" stretchy="false">)</mo>
+        <mo>+</mo>
+        <mn>0.5</mn>
+        <mo>*</mo>
+        <mrow>
+          <mi>sin</mi>
+          <mo>⁡</mo>
+        </mrow>
+        <mo form="prefix" stretchy="false">(</mo>
+        <mn>3.5</mn>
+        <mo>*</mo>
+        <mi>_</mi>
+        <mi>s</mi>
+        <mi>f</mi>
+        <mn>1</mn>
+        <mi>.</mi>
+        <mi>x</mi>
+        <mo form="postfix" stretchy="false">)</mo>
+      </mrow>
+    </math>
+    <pre><code><span class="hljs-keyword">void</span> UpdateSimulation(){
+      _santeriorf1 = _sf1.<span class="hljs-built_in">copy</span>();
+      _sf1.x += SIM_STEP*_v;
+      _sf1.y += <span class="hljs-number">10</span>*(<span class="hljs-number">0.5</span>*<span class="hljs-built_in">sin</span>(<span class="hljs-number">3</span>*_sf1.x)+ <span class="hljs-number">0.5</span>*<span class="hljs-built_in">sin</span>(<span class="hljs-number">3.5</span>*_sf1.x));
+    
+      _santeriorf2 = _sf2.<span class="hljs-built_in">copy</span>();
+      _sf2.x += SIM_STEP*_v;
+      _sf2.y += <span class="hljs-number">10</span>*(<span class="hljs-built_in">sin</span>(_sf2.x) * <span class="hljs-built_in">exp</span>(<span class="hljs-number">-0.002</span>*_sf2.x));
+    
+      <span class="hljs-keyword">PVector</span>[] nuevaLinea1 = {_santeriorf1.<span class="hljs-built_in">copy</span>(),_sf1.<span class="hljs-built_in">copy</span>()};
+      <span class="hljs-keyword">PVector</span>[] nuevaLinea2 = {_santeriorf2.<span class="hljs-built_in">copy</span>(),_sf2.<span class="hljs-built_in">copy</span>()};
+      lineas.<span class="hljs-built_in">add</span>(nuevaLinea1);
+      lineas.<span class="hljs-built_in">add</span>(nuevaLinea2);
+    }
+    </code></pre>
+    <p>
+      Para dibujar las lineas que describen los movimientos, lo que hago es
+      crear un array de lineas,
+      <code
+        >ArrayList&lt;PVector[]&gt; lineas = new
+        ArrayList&lt;PVector[]&gt;();</code
+      >, y dibujar todas las lineas en cada iteracción.
+    </p>
+    <pre><code><span class="hljs-keyword">void</span> <span class="hljs-title">draw</span>()
+    {
+      <span class="hljs-built_in">background</span>(<span class="hljs-number">255</span>);
+    
+    
+      <span class="hljs-built_in">int</span> radio = <span class="hljs-number">20</span>;
+    
+      <span class="hljs-built_in">translate</span>(<span class="hljs-number">0</span>,<span class="hljs-built_in">height</span>);
+      <span class="hljs-built_in">strokeWeight</span>(<span class="hljs-number">1</span>);
+      <span class="hljs-built_in">fill</span>(<span class="hljs-number">0</span>,<span class="hljs-number">200</span>,<span class="hljs-number">0</span>);
+      circle(_sf1.x, _sf1.y, radio); 
+    
+      <span class="hljs-built_in">strokeWeight</span>(<span class="hljs-number">1</span>);
+      <span class="hljs-built_in">fill</span>(<span class="hljs-number">200</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);
+      circle(_sf2.x, _sf2.y, radio); 
+    
+      UpdateSimulation();
+    
+       <span class="hljs-keyword">for</span>(<span class="hljs-keyword">PVector</span>[] linea:lineas){
+         <span class="hljs-built_in">line</span>(linea[<span class="hljs-number">0</span>].x,linea[<span class="hljs-number">0</span>].y,linea[<span class="hljs-number">1</span>].x,linea[<span class="hljs-number">1</span>].y);
+       }
+    
+    }
+    </code></pre>
+    <p>Resultado Final:</p>
+    <div class="video-container">
+      <div class="d-flex justify-content-center">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/Peirusod6Tk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div> 
+  </body>
+</html>

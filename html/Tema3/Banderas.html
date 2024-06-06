@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TelaBola</title>
+</head>
+<body>
+    <h1 class="titulo">Banderas</h1>
+    <p>
+        En esta demo compruebo como reaccionan los diferentes tipos de mallas: Structural, Shear y Bend, a una fuerza externa, 
+        a parte de la de la gravedad, como sería la fuerza que ejerce un viento sobre la malla. Para ello primero tenemos que 
+        clacular las normales al plano de cada particula, y para eso calculamos el producto vectorial, con la regla de la mano 
+        derecha, de los vectores que unen las diferentes partículas. 
+    </p>
+    <pre><code>void CalcularNormales()
+        {
+          PVector <span class="hljs-built_in">v1</span>, v2<span class="hljs-comment">;</span>
+          for(int i = <span class="hljs-number">0</span><span class="hljs-comment">; i &lt; _numNodesH; i++) {</span>
+            for(int <span class="hljs-keyword">j </span>= <span class="hljs-number">0</span><span class="hljs-comment">; j &lt; _numNodesV; j++) {</span>
+              if(_nodes[i][<span class="hljs-keyword">j] </span>!= null) {
+                PVector <span class="hljs-keyword">normal </span>= new PVector(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)<span class="hljs-comment">;</span>
+      
+                if(isInside(i+<span class="hljs-number">1</span>,<span class="hljs-keyword">j) </span>&amp;&amp; isInside(i,<span class="hljs-keyword">j+1) </span>) {
+                  <span class="hljs-built_in">v1</span> = PVector.<span class="hljs-keyword">sub(_nodes[i+1][j].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            v2 = PVector.<span class="hljs-keyword">sub(_nodes[i][j+1].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            <span class="hljs-keyword">normal </span>= <span class="hljs-built_in">v1</span>.cross(v2)<span class="hljs-comment">;</span>
+                  <span class="hljs-keyword">normal.normalize();
+      </span>            _nodes[i][<span class="hljs-keyword">j].setNormal(normal);
+      </span>          } else if(isInside(i-1,<span class="hljs-keyword">j)&amp;&amp; </span>isInside(i,<span class="hljs-keyword">j+1)){
+      </span>            <span class="hljs-built_in">v1</span> = PVector.<span class="hljs-keyword">sub(_nodes[i-1][j].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            v2 = PVector.<span class="hljs-keyword">sub(_nodes[i][j+1].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            <span class="hljs-keyword">normal </span>= v2.cross(<span class="hljs-built_in">v1</span>)<span class="hljs-comment">;</span>
+                  <span class="hljs-keyword">normal.normalize();
+      </span>            _nodes[i][<span class="hljs-keyword">j].setNormal(normal);
+      </span>          } else if(isInside(i-1,<span class="hljs-keyword">j) </span>&amp;&amp; isInside(i,<span class="hljs-keyword">j-1)){
+      </span>            <span class="hljs-built_in">v1</span> = PVector.<span class="hljs-keyword">sub(_nodes[i][j-1].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            v2 = PVector.<span class="hljs-keyword">sub(_nodes[i-1][j].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            <span class="hljs-keyword">normal </span>= v2.cross(<span class="hljs-built_in">v1</span>)<span class="hljs-comment">;</span>
+                  <span class="hljs-keyword">normal.normalize();
+      </span>            _nodes[i][<span class="hljs-keyword">j].setNormal(normal);
+      </span>          } else {
+                  <span class="hljs-built_in">v1</span> = PVector.<span class="hljs-keyword">sub(_nodes[i+1][j].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            v2 = PVector.<span class="hljs-keyword">sub(_nodes[i][j-1].getPosition(), </span>_nodes[i][<span class="hljs-keyword">j].getPosition());
+      </span>            <span class="hljs-keyword">normal </span>= v2.cross(<span class="hljs-built_in">v1</span>)<span class="hljs-comment">;</span>
+                  <span class="hljs-keyword">normal.normalize();
+      </span>            _nodes[i][<span class="hljs-keyword">j].setNormal(normal);
+      </span>          }
+      
+              }
+            }
+          }
+        }
+      </code></pre>
+    <p>
+        Para posteriormente sacar la fuerza del viento que le llega a cada nodo, con el modelo que hemos aprendido en clase, 
+        en el que calculamos cuanto del vector viento le llega a la particula, para posteriormente, multiplicar ese valor 
+        entre 0 y 1, por el vector viento.
+    </p>
+    <pre><code><span class="hljs-keyword">void</span> updateWindForce()
+        {
+           <span class="hljs-keyword">PVector</span> FuerzaViento = VIENTO.<span class="hljs-built_in">copy</span>();
+           FuerzaViento.normalize();
+           <span class="hljs-built_in">float</span> modulo = <span class="hljs-keyword">PVector</span>.dot(_normal, FuerzaViento);
+     
+           _F.<span class="hljs-built_in">add</span>(<span class="hljs-keyword">PVector</span>.mult(VIENTO,<span class="hljs-built_in">abs</span>(modulo)));
+        }
+     </code></pre>
+    <h5>Resultado Final:</h5>
+    <div class="d-flex justify-content-center">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/4zAc6PV1eUs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</body>
+</html>
